@@ -179,6 +179,15 @@ if [ $NEXTCLOUD -eq 1 ]; then
 	sed -i "s/^);/  'memcache.local' => '\\\OC\\\Memcache\\\APCu',/" $NEXTCLOUD_CONFIG_FILE
 	echo ');' >> $NEXTCLOUD_CONFIG_FILE
 
+	## https://docs.nextcloud.com/server/14/admin_manual/configuration_server/server_tuning.html#enable-php-opcache
+	sed -i "s/;opcache.enable=./opcache.enable=1/" $PHP_FPM_INI_FILE
+	sed -i "s/;opcache.enable_cli=./opcache.enable_cli=1/" $PHP_FPM_INI_FILE
+	sed -i "s/;opcache.interned_strings_buffer=.*/opcache.interned_strings_buffer=8/" $PHP_FPM_INI_FILE
+	sed -i "s/;opcache.max_accelerated_files=.*/opcache.max_accelerated_files=10000/" $PHP_FPM_INI_FILE
+	sed -i "s/;opcache.memory_consumption=.*/opcache.memory_consumption=128/" $PHP_FPM_INI_FILE
+	sed -i "s/;opcache.save_comments=./opcache.save_comments=1/" $PHP_FPM_INI_FILE
+	sed -i "s/;opcache.revalidate_freq=./opcache.revalidate_freq=1/" $PHP_FPM_INI_FILE
+
 	## MySQL/MariaDB configuration
 	echo "----- You need to configure your database by answering some questions. -----"
 	mysql_secure_installation
