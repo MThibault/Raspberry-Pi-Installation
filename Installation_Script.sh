@@ -30,6 +30,7 @@ SSH_CONFIG_FILE="/etc/ssh/sshd_config"
 
 ## PHP
 PHP_FPM_INI_FILE="/etc/php/7.0/fpm/php.ini"
+PHP_FPM_POOL_FILE="/etc/php/7.0/fpm/pool.d/www.conf"
 
 
 #########################
@@ -124,7 +125,7 @@ if [ $NEXTCLOUD -eq 1 ]; then
 	## Version 14.0.0
 	echo "##### Nextcloud start #####"
 	## Install packets needed
-	apt-get install -y nginx-light php7.0-fpm php7.0-zip php7.0-curl php7.0-gd php7.0-xml php7.0-mbstring php7.0-json php7.0-mysql php7.0-bz2 php7.0-intl php7.0-mcrypt mariadb-server
+	apt-get install -y nginx-light php7.0-fpm php7.0-zip php7.0-curl php7.0-gd php7.0-xml php7.0-mbstring php7.0-json php7.0-mysql php7.0-bz2 php7.0-intl php7.0-mcrypt php-imagick mariadb-server
 	error "Install Nextcloud package required"
 	rm /etc/nginx/sites-enabled/default
 	
@@ -160,7 +161,16 @@ if [ $NEXTCLOUD -eq 1 ]; then
 	sed -i "s/post_max_size = .*/post_max_size = 250M/" $PHP_FPM_INI_FILE
 	sed -i "s/max_execution_time = .*/max_execution_time = 360/" $PHP_FPM_INI_FILE
 	sed -i "s/max_input_time = .*/max_input_time = 360/" $PHP_FPM_INI_FILE
-	
+
+	## PHP getenv support
+	## https://docs.nextcloud.com/server/14/admin_manual/installation/source_installation.html#php-fpm-tips-label
+	sed -i "s/;env\[HOSTNAME\] = \$HOSTNAME/env\[HOSTNAME\] = \$HOSTNAME/" $PHP_FPM_POOL_FILE
+	sed -i "s/;env\[PATH\] = \/usr\/local\/bin:\/usr\/bin:\/bin/env\[PATH\] = \/usr\/local\/bin:\/usr\/bin:\/bin/" $PHP_FPM_POOL_FILE
+	sed -i "s/;env\[TMP\] = \/tmp/env\[TMP\] = \/tmp/" $PHP_FPM_POOL_FILE
+	sed -i "s/;env\[TMPDIR\] = \/tmp/env\[TMPDIR\] = \/tmp/" $PHP_FPM_POOL_FILE
+	sed -i "s/;env\[TEMP\] = \/tmp/env\[TEMP\] = \/tmp/" $PHP_FPM_POOL_FILE
+	sed -i "s/;clear_env = no/clear_env = no/" $PHP_FPM_POOL_FILE
+
 	## MySQL/MariaDB configuration
 	echo "----- You need to configure your database by answering some questions. -----"
 	mysql_secure_installation
