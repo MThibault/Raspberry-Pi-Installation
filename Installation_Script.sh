@@ -32,6 +32,9 @@ SSH_CONFIG_FILE="/etc/ssh/sshd_config"
 PHP_FPM_INI_FILE="/etc/php/7.0/fpm/php.ini"
 PHP_FPM_POOL_FILE="/etc/php/7.0/fpm/pool.d/www.conf"
 
+## Nextcloud
+NEXTCLOUD_CONFIG_FILE="/srv/http/nextcloud/config/config.php"
+
 
 #########################
 #	Function	#
@@ -125,7 +128,7 @@ if [ $NEXTCLOUD -eq 1 ]; then
 	## Version 14.0.0
 	echo "##### Nextcloud start #####"
 	## Install packets needed
-	apt-get install -y nginx-light php7.0-fpm php7.0-zip php7.0-curl php7.0-gd php7.0-xml php7.0-mbstring php7.0-json php7.0-mysql php7.0-bz2 php7.0-intl php7.0-mcrypt php-imagick mariadb-server
+	apt-get install -y nginx-light php7.0-fpm php7.0-zip php7.0-curl php7.0-gd php7.0-xml php7.0-mbstring php7.0-json php7.0-mysql php7.0-bz2 php7.0-intl php7.0-mcrypt php-imagick php-apcu mariadb-server
 	error "Install Nextcloud package required"
 	rm /etc/nginx/sites-enabled/default
 	
@@ -170,6 +173,11 @@ if [ $NEXTCLOUD -eq 1 ]; then
 	sed -i "s/;env\[TMPDIR\] = \/tmp/env\[TMPDIR\] = \/tmp/" $PHP_FPM_POOL_FILE
 	sed -i "s/;env\[TEMP\] = \/tmp/env\[TEMP\] = \/tmp/" $PHP_FPM_POOL_FILE
 	sed -i "s/;clear_env = no/clear_env = no/" $PHP_FPM_POOL_FILE
+
+	## PHP Memory Caching to increase performance
+	## https://docs.nextcloud.com/server/14/admin_manual/configuration_server/caching_configuration.html
+	sed -i "s/^);/  'memcache.local' => '\\\OC\\\Memcache\\\APCu',/" $NEXTCLOUD_CONFIG_FILE
+	echo ');' >> $NEXTCLOUD_CONFIG_FILE
 
 	## MySQL/MariaDB configuration
 	echo "----- You need to configure your database by answering some questions. -----"
