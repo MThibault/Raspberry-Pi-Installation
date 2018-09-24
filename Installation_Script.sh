@@ -62,9 +62,6 @@ if [ $UPGRADE -eq 1 ]; then
 	echo "##### Upgrade end #####"
 fi
 
-if [ $UPGRADE -eq 1 ]; then
-if [ $UPGRADE -eq 1 ]; then
-
 
 #################################
 #	Change Password		#
@@ -99,6 +96,9 @@ if [ $SSH -eq 1 ]; then
 	## Change MaxStatups value
 	sed -i "s/^[#|.]MaxStartups .*/MaxStartups 10:30:100/" $SSH_CONFIG_FILE
 	error "SSH MaxStartups"
+	## Change Banner value
+	sed -i "s/^[#|.]Banner .*/Banner none/" $SSH_CONFIG_FILE
+	error "SSH Banner"
 	
 	## AllowUsers A FAIRE
 	
