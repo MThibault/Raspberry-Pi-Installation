@@ -43,6 +43,7 @@ function error {
 	if [ `echo $?` -ne 0 ]; then
 		echo "Error during $1.";
 		exit;
+		echo ""
 	fi
 }
 
@@ -58,8 +59,9 @@ if [ $UPGRADE -eq 1 ]; then
 
 	## Install additional software
 	apt-get install -y vim
-	error "Install vim"
+	error "Install vim htop"
 	echo "##### Upgrade end #####"
+	echo ""
 fi
 
 
@@ -69,10 +71,13 @@ fi
 if [ $CHPASSWD -eq 1 ]; then
 	echo "##### Password start #####"
 	## Change pi password
+	echo "Change pi password"
 	passwd pi
 	## Change root password
+	echo "Change root password"
 	passwd root
 	echo "##### Password end #####"
+	echo ""
 fi
 
 
@@ -106,6 +111,7 @@ if [ $SSH -eq 1 ]; then
 	systemctl restart ssh.service
 	error "SSH restart"
 	echo "----- Open a new shell and connect to the server using SSH to validate that the new configuration did not block the access. DO NOT CLOSE THIS CONNECTION without retesting first. -----"
+	echo ""
 fi
 
 
@@ -118,6 +124,7 @@ if [ $SUDO -eq 1 ]; then
 	apt-get autoremove --purge -y sudo
 	error "Remove program"
 	echo "##### Remove program end #####"
+	echo ""
 fi
 
 
@@ -201,4 +208,5 @@ if [ $NEXTCLOUD -eq 1 ]; then
 	
 	systemctl restart nginx.service php7.0-fpm.service mariadb.service
 	echo "##### Nextcloud end #####"
+	echo ""
 fi
