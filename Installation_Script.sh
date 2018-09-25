@@ -104,6 +104,12 @@ if [ $SSH -eq 1 ]; then
 	## Change Banner value
 	sed -i "s/^[#|.]Banner .*/Banner none/" $SSH_CONFIG_FILE
 	error "SSH Banner"
+	## Change Syslog Facility
+	sed -i "s/^[#|.]SyslogFacility .*/SyslogFacility AUTH/" $SSH_CONFIG_FILE
+	error "SSH Syslog Facility"
+	## Change Log Level
+	sed -i "s/^[#|.]LogLevel .*/LogLevel INFO/" $SSH_CONFIG_FILE
+	error "SSH Log Level"
 	
 	## AllowUsers A FAIRE
 	
