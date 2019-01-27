@@ -58,8 +58,8 @@ if [ $UPGRADE -eq 1 ]; then
 	error "Upgrade"
 
 	## Install additional software
-	apt-get install -y vim
-	error "Install vim htop"
+	apt-get install -y vim htop git
+	error "Install vim htop git"
 	echo "##### Upgrade end #####"
 	echo ""
 fi
