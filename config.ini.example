@@ -1,0 +1,7 @@
+# Fichier de configuration
+EMAIL_SENDER="test@test.com"
+EMAIL_RCPT="destination@email.com"
+DOMAIN="mydomaine.com" #Set your domain
+
+PHP_VERSION="7.3"
+NEXTCLOUD_VERSION="nextcloud-21.0.0.zip"
